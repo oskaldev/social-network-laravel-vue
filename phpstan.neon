@@ -1,0 +1,8 @@
+parameters:
+    level: 5
+    paths:
+        - app
+        - routes
+    ignoreErrors:
+        # Если нужно что-то игнорировать
+        # - '#Some known error#'
