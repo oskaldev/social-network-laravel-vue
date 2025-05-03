@@ -4,6 +4,7 @@ import router from './router/router.js'
 
 window.axios = axios
 window.axios.defaults.withCredentials = true
+window.axios.defaults.headers.common[ 'Authorization' ] = `Bearer ${localStorage.getItem('token')}`
 window.axios.defaults.headers.common[ 'X-Requested-With' ] = 'XMLHttpRequest'
 window.axios.interceptors.response.use(
   response => response,

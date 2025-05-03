@@ -15,9 +15,20 @@
     methods: {
       register() {
         axios.get('/sanctum/csrf-cookie').then(response => {
-          axios.post('/register', { email: this.email, password: this.password, name: this.name, password_confirmation: this.password_confirmation })
+          axios.post('/api/register', {
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            password_confirmation: this.password_confirmation
+          })
             .then(res => {
-              console.log(res)
+              console.log(res.data.message)
+              localStorage.setItem('token', res.data.token)
+              this.$router.push({ name: 'user.personal' }) // Перенаправление на страницу после успешной регистрации
+            })
+            .catch(err => {
+              console.error('Ошибка регистрации:', err.response?.data ?? err)
+              alert('Ошибка регистрации. Проверьте введенные данные.')
             })
         })
       }

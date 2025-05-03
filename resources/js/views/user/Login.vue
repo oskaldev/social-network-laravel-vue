@@ -6,25 +6,27 @@
       return {
         email: null,
         password: null,
-        isAuthenticated: false,
       }
     },
     methods: {
       login() {
-        axios.get('/sanctum/csrf-cookie', { withCredentials: true }).then(response => {
-          axios.post('/login', { email: this.email, password: this.password })
+        axios.get('/sanctum/csrf-cookie').then(response => {
+          axios.post('/api/login', {
+            email: this.email,
+            password: this.password
+          })
             .then(res => {
-              console.log(res)
-              this.$root.checkAuth()
+              console.log('Login successful', res.data)
+              localStorage.setItem('token', res.data.token)
               this.isAuthenticated = true
               this.$router.push({ name: 'user.personal' })
             })
             .catch(err => {
-              console.log(err.response)
+              console.error('Ошибка входа:', err.response?.data ?? err)
             })
         })
       }
-    },
+    }
   }
 </script>
 
