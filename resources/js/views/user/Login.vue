@@ -10,21 +10,20 @@
     },
     methods: {
       login() {
-        axios.get('/sanctum/csrf-cookie').then(response => {
-          axios.post('/api/login', {
-            email: this.email,
-            password: this.password
-          })
-            .then(res => {
-              console.log('Login successful', res.data)
-              localStorage.setItem('token', res.data.token)
-              this.isAuthenticated = true
-              this.$router.push({ name: 'user.personal' })
-            })
-            .catch(err => {
-              console.error('Ошибка входа:', err.response?.data ?? err)
-            })
+        axios.post('/api/login', {
+          email: this.email,
+          password: this.password
         })
+          .then(res => {
+            console.log('Login successful', res.data)
+            localStorage.setItem('token', res.data.token)
+            window.dispatchEvent(new Event('auth-changed'))
+            this.$router.push({ name: 'user.personal' })
+          })
+          .catch(err => {
+            console.error('Ошибка входа:', err.response?.data ?? err)
+          })
+
       }
     }
   }

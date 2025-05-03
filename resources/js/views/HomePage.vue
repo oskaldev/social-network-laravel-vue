@@ -9,45 +9,47 @@
       }
     },
     created() {
-      const token = localStorage.getItem('token')
-      if (token) {
-        axios.get('/api/user', {
+      this.checkAuth()
+      window.addEventListener('auth-changed', this.checkAuth)
+    },
+    beforeUnmount() {
+      window.removeEventListener('auth-changed', this.checkAuth)
+    },
+    methods: {
+      checkAuth() {
+        const token = localStorage.getItem('token')
+        if (token) {
+          axios.get('/api/user', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+            .then(() => {
+              this.isAuthenticated = true
+            })
+            .catch(() => {
+              this.isAuthenticated = false
+            })
+        } else {
+          this.isAuthenticated = false
+        }
+      },
+      logout() {
+        axios.post('/api/logout', {}, {
           headers: {
-            Authorization: `Bearer ${token}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         })
           .then(() => {
-            this.isAuthenticated = true
-          })
-          .catch(() => {
+            localStorage.removeItem('token')
             this.isAuthenticated = false
-          })
-      }
-    },
-    methods: {
-      logout() {
-        axios.get('/sanctum/csrf-cookie')
-          .then(() => {
-            axios.post('/api/logout', {}, {
-              headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-              }
-            })
-              .then(() => {
-                localStorage.removeItem('token')
-                this.isAuthenticated = false
-                this.$router.push({ name: 'user.login' })
-              })
-              .catch((err) => {
-                console.error('Ошибка выхода:', err)
-              })
+            window.dispatchEvent(new Event('auth-changed'))
+            this.$router.push({ name: 'user.login' })
           })
           .catch((err) => {
-            console.error('Ошибка CSRF:', err)
+            console.error('Ошибка выхода:', err)
           })
-
       }
-
     }
   }
 </script>

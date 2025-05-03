@@ -28,26 +28,36 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const protectedRoutes = [ 'user.personal' ]
-  if (protectedRoutes.includes(to.name)) {
-    const token = localStorage.getItem('token')
-    if (token) {
-      try {
-        await axios.get('/api/user', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        next()
-      } catch (error) {
-        next({ name: 'user.login' })
+  const token = localStorage.getItem('token')
+
+  const isAuthRoute = [ 'user.login', 'user.registration' ].includes(to.name)
+  const isProtectedRoute = [ 'user.personal' ].includes(to.name)
+
+  if (token) {
+    try {
+      await axios.get('/api/user', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      // Пользователь залогинен
+      if (isAuthRoute) {
+        return next({ name: 'user.personal' }) // запрет на login/registration
       }
-    } else {
-      next({ name: 'user.login' })
+      return next()
+    } catch (error) {
+      // Токен невалиден
+      localStorage.removeItem('token')
+      if (isProtectedRoute) return next({ name: 'user.login' })
+      return next()
     }
   } else {
-    next()
+    // Нет токена
+    if (isProtectedRoute) return next({ name: 'user.login' })
+    return next()
   }
 })
+
 
 export default router
