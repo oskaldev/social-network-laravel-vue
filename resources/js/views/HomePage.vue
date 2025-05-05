@@ -56,12 +56,15 @@
 
 <template>
   <div>
-    <router-link v-if="!isAuthenticated" :to="{ name: 'user.login' }">Login</router-link>
-    <router-link v-if="!isAuthenticated" class="p-1" :to="{ name: 'user.registration' }">Registration</router-link>
-    <router-link v-if="isAuthenticated" class="p-1" :to="{ name: 'user.personal' }">Personal</router-link>
-    <a v-if="isAuthenticated" @click.prevent="logout" href="#">Logout</a>
-    <router-view></router-view>
+    <div class="flex flex-wrap justify-between p-8 w-96 mx-auto">
+      <router-link v-if="!isAuthenticated" :to="{ name: 'user.login' }">Login</router-link>
+      <router-link v-if="!isAuthenticated" class="p-1" :to="{ name: 'user.registration' }">Registration</router-link>
+      <router-link v-if="isAuthenticated" class="p-1" :to="{ name: 'user.personal' }">Personal</router-link>
+      <a v-if="isAuthenticated" @click.prevent="logout" href="#">Logout</a>
+      <router-view></router-view>
+    </div>
   </div>
+
 </template>
 
 <style scoped></style>

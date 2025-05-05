@@ -28,7 +28,6 @@
           })
           .catch(err => {
             console.error('Ошибка регистрации:', err.response?.data ?? err)
-            alert('Ошибка регистрации. Проверьте введенные данные.')
           })
       }
     }
@@ -36,13 +35,22 @@
 </script>
 
 <template>
-  <div style="display: table-caption">
-    Registration
-    <input v-model="email" type="email" class="from-control m-1" placeholder="email">
-    <input v-model="name" type="name" class="from-control m-1" placeholder="name">
-    <input v-model="password" type="password" class="from-control m-1" placeholder="password">
-    <input v-model="password_confirmation" type="password" class="from-control m-1" placeholder="password_confirmation">
-    <input @click.prevent="register" type="button" value="register" class="btn btn-primary m-1">
+  <div>
+    <div class="w-96 mx-auto">
+      <div>
+        <input v-model="name" type="name" placeholder="name" class="w-96 p-1 mb-2 border border-inherit rounded-lg">
+      </div>
+      <div>
+        <input v-model="email" type="email" placeholder="email" class="w-96 p-1 mb-2 border border-inherit rounded-lg">
+      </div>
+      <div>
+        <input v-model="password" type="password" placeholder="password" class="w-96 p-1 mb-2 border border-inherit rounded-lg">
+      </div>
+      <div>
+        <input v-model="password_confirmation" type="password" placeholder="password_confirmation" class="w-96 p-1 mb-2 border border-inherit rounded-lg">
+      </div>
+      <input @click.prevent="register" type="submit" value="register" class="block cursor-pointer float-right mx-auto w-32 p-1 bg-sky-400 text-white rounded-lg">
+    </div>
   </div>
 </template>
 <style scoped></style>

@@ -6,7 +6,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="w-96 mx-auto mt-8">
     Personal
   </div>
 </template>

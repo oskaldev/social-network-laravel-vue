@@ -30,11 +30,16 @@
 </script>
 
 <template>
-  <div style="display: table-caption;">
-    Login
-    <input v-model="email" type="email" class="from-control m-1" placeholder="email" name="" id="">
-    <input v-model="password" type="password" class="from-control m-1" placeholder="password" name="" id="">
-    <input @click.prevent="login" type="submit" value="login" class="btn btn-primary m-1">
+  <div class="w-96 mx-auto">
+    <div>
+      <input v-model="email" type="email" placeholder="email" class="w-96 p-1 mb-2 border border-inherit rounded-lg">
+    </div>
+    <div>
+      <input v-model="password" type="password" placeholder="password" class="w-96 p-1 mb-2 border border-inherit rounded-lg">
+    </div>
+    <div>
+      <input @click.prevent="login" type="submit" value="login" class="block  cursor-pointer float-right mx-auto w-32 p-1 bg-sky-400 text-white rounded-lg">
+    </div>
   </div>
 </template>
 

@@ -15,7 +15,6 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-
     public function apiRegister(Request $request)
     {
 
@@ -33,9 +32,8 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        
-        $token = $user->createToken('YourAppName')->plainTextToken;
 
+        $token = $user->createToken('YourAppName')->plainTextToken;
 
         return response()->json([
             'message' => 'User registered successfully',
