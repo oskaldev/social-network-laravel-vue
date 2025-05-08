@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
+use App\Http\Requests\Post\PostStoreRequest;
+use App\Http\Resources\Post\PostResourse;
 use App\Models\Post;
+use App\Models\PostImage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -27,9 +31,37 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request)
+    public function store(PostStoreRequest $request)
     {
-        //
+        $data = $request->validated();
+        $post = null;
+
+        try {
+            DB::transaction(function () use ($data, &$post) {
+                $data['user_id'] = auth()->id();
+
+                $imageId = $data['image_id'];
+                unset($data['image_id']);
+
+                $post = Post::create($data);
+
+                if (isset($imageId)) {
+                    $image = PostImage::find($imageId);
+                    $image->update([
+                        'status' => true,
+                        'post_id' => $post->id,
+                    ]);
+                }
+            });
+
+            return new PostResourse($post);
+        } catch (\Throwable $th) {
+            Log::error('Error while creating post: '.$th->getMessage());
+
+            return response()->json([
+                'message' => 'Произошла ошибка при создании поста. Попробуйте еще раз позже.',
+            ], 500);
+        }
     }
 
     /**
@@ -51,7 +83,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(Request $request, Post $post)
     {
         //
     }
