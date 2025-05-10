@@ -8,14 +8,27 @@
       return {
         title: '',
         content: '',
-        image: null
+        image: null,
+        posts: []
       }
     },
+    mounted() {
+      this.getPosts()
+    },
     methods: {
+      getPosts() {
+        axios.get('/api/posts').then(res => {
+          this.posts = res.data.data
+        })
+      },
       store() {
         const imageId = this.image?.id ?? null
         axios.post('/api/posts', { title: this.title, content: this.content, image_id: imageId })
           .then(res => {
+            this.title = ''
+            this.content = ''
+            this.image = null
+            this.posts.unshift(res.data.data)
             console.log(res)
           })
       },
@@ -39,7 +52,7 @@
 
 <template>
   <div class="w-96 mx-auto mt-8">
-    <div>
+    <div class="mb-4">
       <div>
         <input v-model="title" class="w-96 mb-3 rounded-3xl border p-2 border-slate-300" type="text" placeholder="title">
       </div>
@@ -64,6 +77,17 @@ ocus:outline-none text-white text-center bg-green-700 hover:bg-green-800 focus:r
           placeholder="content">Publish</a>
       </div>
     </div>
+
+    <div v-if="posts">
+      <h1 class="mb-8 pb-8 border-b border-gray-500">Posts</h1>
+      <div v-for="(post, index) in posts" :key="index" class="mb-8 pb-8 rounded-2xl border-b  border-gray-500">
+        <h1 class="text-xl">{{ post.title }}</h1>
+        <img class="my-3 mx-auto" v-if="post.image_url" :src="post.image_url" :alt="post.title" />
+        <p class="my-3">{{ post.content }}</p>
+        <p class="mt-2 text-right text-slate-500 text-sm">{{ post.created_at }}</p>
+      </div>
+    </div>
+
   </div>
 </template>
 

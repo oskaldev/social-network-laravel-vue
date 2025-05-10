@@ -17,7 +17,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::where('user_id', auth()->id())->latest()->get();
+
+        return PostResourse::collection($posts);
     }
 
     /**
@@ -52,6 +54,7 @@ class PostController extends Controller
                         'post_id' => $post->id,
                     ]);
                 }
+                PostImage::clearStorage();
             });
 
             return new PostResourse($post);
