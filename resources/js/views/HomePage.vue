@@ -61,6 +61,7 @@
       <router-link v-if="!isAuthenticated" :to="{ name: 'user.registration' }">Registration</router-link>
       <router-link v-if="isAuthenticated" :to="{ name: 'user.personal' }">Personal</router-link>
       <router-link v-if="isAuthenticated" :to="{ name: 'user.index' }">Users List</router-link>
+      <router-link v-if="isAuthenticated" :to="{ name: 'user.feed' }">Feed</router-link>
       <a v-if="isAuthenticated" @click.prevent="logout" href="#">Logout</a>
       <router-view></router-view>
     </div>

@@ -5,32 +5,44 @@ import Personal from "../views/user/Personal.vue"
 import axios from "axios"
 import Index from "../views/user/Index.vue"
 import Show from "../views/user/Show.vue"
+import Feed from "../views/user/Feed.vue"
 
 const routes = [
   {
     path: '/users/list',
     name: 'user.index',
     component: Index,
+    meta: { requiresAuth: true },
   },
   {
     path: '/users/:id',
     name: 'user.show',
     component: Show,
+    meta: { requiresAuth: true },
+  },
+  { 
+    path: '/users/feed',
+    name: 'user.feed',
+    component: Feed,
+    meta: { requiresAuth: true },
   },
   {
     path: '/users/login',
     name: 'user.login',
     component: Login,
+    meta: { guestOnly: true },
   },
   {
     path: '/users/registration',
     name: 'user.registration',
     component: Registration,
+    meta: { guestOnly: true },
   },
   {
     path: '/users/personal',
     name: 'user.personal',
     component: Personal,
+    meta: { requiresAuth: true },
   },
 ]
 
@@ -42,8 +54,8 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token')
 
-  const isAuthRoute = [ 'user.login', 'user.registration' ].includes(to.name)
-  const isProtectedRoute = [ 'user.personal', 'user.index', 'user.show' ].includes(to.name)
+  const isAuthRoute = to.meta.guestOnly
+  const isProtectedRoute = to.meta.requiresAuth
 
   if (token) {
     try {

@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\SubscriberFollowing;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
@@ -50,6 +51,14 @@ class UserController extends Controller
         $data['is_followed'] = count($res['attached']) > 0;
 
         return $data;
+    }
+
+    public function followingPost(): AnonymousResourceCollection
+    {
+        $followedIds = auth()->user()->followings()->get()->pluck('id')->toArray();
+        $posts = Post::whereIn('user_id', $followedIds)->get();
+
+        return PostResourse::collection($posts);
     }
 
     /**
