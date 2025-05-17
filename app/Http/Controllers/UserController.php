@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Post\PostStoreRequest;
 use App\Http\Resources\Post\PostResourse;
 use App\Http\Resources\User\UserResource;
 use App\Models\Post;
 use App\Models\SubscriberFollowing;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
@@ -53,56 +51,14 @@ class UserController extends Controller
         return $data;
     }
 
+    /**
+     * Summary of followingPost
+     */
     public function followingPost(): AnonymousResourceCollection
     {
         $followedIds = auth()->user()->followings()->get()->pluck('id')->toArray();
         $posts = Post::whereIn('user_id', $followedIds)->get();
 
         return PostResourse::collection($posts);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(PostStoreRequest $request) {}
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
-    {
-        //
     }
 }

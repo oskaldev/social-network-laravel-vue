@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\PostStoreRequest;
 use App\Http\Resources\Post\PostResourse;
+use App\Models\LikedPost;
 use App\Models\Post;
 use App\Models\PostImage;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -18,6 +18,14 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::where('user_id', auth()->id())->latest()->get();
+        $likedIds = LikedPost::where('user_id', auth()->id())
+            ->get('post_id')->pluck('post_id')->toArray();
+
+        foreach ($posts as $post) {
+            if (in_array($post->id, $likedIds)) {
+                $post->is_liked = true;
+            }
+        }
 
         return PostResourse::collection($posts);
     }
@@ -68,34 +76,16 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Summary of toggleLike
+     *
+     * @return bool[]
      */
-    public function show(Post $post)
+    public function toggleLike(Post $post): array
     {
-        //
-    }
+        $res = auth()->user()->likedPosts()->toggle($post->id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
+        $data['is_liked'] = count($res['attached']) > 0;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
-    {
-        //
+        return $data;
     }
 }
