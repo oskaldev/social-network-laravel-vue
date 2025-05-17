@@ -4,25 +4,31 @@ import Registration from "../views/user/Registration.vue"
 import Personal from "../views/user/Personal.vue"
 import axios from "axios"
 import Index from "../views/user/Index.vue"
+import Show from "../views/user/Show.vue"
 
 const routes = [
   {
-    path: '/user/list',
+    path: '/users/list',
     name: 'user.index',
     component: Index,
   },
   {
-    path: '/user/login',
+    path: '/users/:id',
+    name: 'user.show',
+    component: Show,
+  },
+  {
+    path: '/users/login',
     name: 'user.login',
     component: Login,
   },
   {
-    path: '/user/registration',
+    path: '/users/registration',
     name: 'user.registration',
     component: Registration,
   },
   {
-    path: '/user/personal',
+    path: '/users/personal',
     name: 'user.personal',
     component: Personal,
   },
@@ -37,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token')
 
   const isAuthRoute = [ 'user.login', 'user.registration' ].includes(to.name)
-  const isProtectedRoute = [ 'user.personal', 'user.index' ].includes(to.name)
+  const isProtectedRoute = [ 'user.personal', 'user.index', 'user.show' ].includes(to.name)
 
   if (token) {
     try {

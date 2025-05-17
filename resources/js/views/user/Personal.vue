@@ -1,8 +1,10 @@
 <script>
   import axios from 'axios'
+  import Post from '../../components/Post.vue'
 
   export default {
     components: {
+      Post
     },
     data() {
       return {
@@ -79,13 +81,7 @@ ocus:outline-none text-white text-center bg-green-700 hover:bg-green-800 focus:r
     </div>
 
     <div v-if="posts">
-      <h1 class="mb-8 pb-8 border-b border-gray-500">Posts</h1>
-      <div v-for="(post, index) in posts" :key="index" class="mb-8 pb-8 rounded-2xl border-b  border-gray-500">
-        <h1 class="text-xl">{{ post.title }}</h1>
-        <img class="my-3 mx-auto" v-if="post.image_url" :src="post.image_url" :alt="post.title" />
-        <p class="my-3">{{ post.content }}</p>
-        <p class="mt-2 text-right text-slate-500 text-sm">{{ post.created_at }}</p>
-      </div>
+      <Post v-for="(post, index) in posts" :key="index" :post="post" />
     </div>
 
   </div>

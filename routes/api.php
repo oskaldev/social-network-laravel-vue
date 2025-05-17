@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/posts', [PostController::class, 'store']);
     Route::get('/posts', [PostController::class, 'index']);
     Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{user}/posts', [UserController::class, 'post']);
+    Route::get('/users/{user}/toggle_following', [UserController::class, 'toggleFollowing']);
     Route::post('/post/images', [PostImageController::class, 'store']);
     Route::post('/logout', [LoginController::class, 'logoutApi']);
 });
